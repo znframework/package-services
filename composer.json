@@ -13,10 +13,10 @@
     "require": {
         "php": ">=7.0.0",
         "znframework/package-zerocore": "5.5.*",
-        "znframework/package-request": "5.0.*",
-        "znframework/package-protection": "5.0.*",
-        "znframework/package-response": "5.0.*",
-        "znframework/package-xml": "5.0.*"
+        "znframework/package-request": "5.5.*",
+        "znframework/package-protection": "5.5.*",
+        "znframework/package-response": "5.5.*",
+        "znframework/package-xml": "5.5.*"
 	},
     "autoload": {
         "psr-4": {
