@@ -70,7 +70,8 @@ class CDN implements CDNInterface
      */
     public static function get(String $configName, String $name) : String
     {
-        $config = Config::default(new CDNDefaultConfiguration)::get('CDNLinks');
+        $config = Config::default('ZN\Services\CDNDefaultConfiguration')
+                        ::get('CDNLinks');
 
         $configData = ! empty($config[$configName]) ? $config[$configName] : '';
 
