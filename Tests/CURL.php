@@ -16,6 +16,14 @@ class CURL extends UnitTest
     const unit =
     [
         'class'   => 'CURL',
-        'methods' => []
+        'methods' => 
+        [
+            'init'   => ['https://znframework.com'],
+            'option' => ['sslVerifypeer', true],
+            'exec'   => [],
+            'info'   => [],
+            'error'  => [],
+            'errno'  => []
+        ]
     ];
 }

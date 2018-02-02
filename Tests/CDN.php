@@ -16,6 +16,12 @@ class CDN extends UnitTest
     const unit =
     [
         'class'   => 'CDN',
-        'methods' => []
+        'methods' => 
+        [
+            'api'           => ['/site-address'],
+            'getLibrary'    => ['jquery'],
+            'searchQuery'   => ['bootstrap'],
+            'get'           => ['script', 'jquery']
+        ]
     ];
 }

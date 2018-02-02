@@ -16,6 +16,12 @@ class Restful extends UnitTest
     const unit =
     [
         'class'   => 'Restful',
-        'methods' => []
+        'methods' => 
+        [
+            # 'contentType'   => ['json', 'utf-8'],
+            'httpStatus'    => [200],
+            'info'          => [NULL],
+            'get'           => ['https://znframework.com']
+        ]
     ];
 }
