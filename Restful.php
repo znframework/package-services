@@ -135,11 +135,11 @@ class Restful implements RestfulInterface
     /**
      * Data
      * 
-     * @param array $data
+     * @param mixed $data
      * 
      * @return Restful
      */
-    public function data(Array $data) : Restful
+    public function data($data) : Restful
     {
         $this->data = $data;
 
@@ -182,11 +182,11 @@ class Restful implements RestfulInterface
      * Post 
      * 
      * @param string $url  = NULL
-     * @param array  $data = []
+     * @param mixed  $data = NULL
      * 
      * @return object
      */
-    public function post(String $url = NULL, Array $data = [])
+    public function post(String $url = NULL, $data = NULL)
     {
         $response = $this->curl
                          ->init($this->url ?? $url)
@@ -203,11 +203,11 @@ class Restful implements RestfulInterface
      * Put 
      * 
      * @param string $url  = NULL
-     * @param array  $data = []
+     * @param mixed  $data = NULL
      * 
      * @return object
      */
-    public function put(String $url = NULL, Array $data = [])
+    public function put(String $url = NULL, $data = NULL)
     {
         return $this->_customRequest($url, URL::buildQuery($this->data ?? $data), __FUNCTION__);
     }
@@ -216,11 +216,11 @@ class Restful implements RestfulInterface
      * Delete 
      * 
      * @param string $url  = NULL
-     * @param array  $data = []
+     * @param mixed  $data = NULL
      * 
      * @return object
      */
-    public function delete(String $url = NULL, Array $data = [])
+    public function delete(String $url = NULL, $data = NULL)
     {
         return $this->_customRequest($url, $this->data ?? $data, __FUNCTION__);
     }

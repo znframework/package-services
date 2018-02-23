@@ -51,11 +51,11 @@ interface RestfulInterface
     /**
      * Data
      * 
-     * @param array $data
+     * @param mixed $data
      * 
      * @return Restful
      */
-    public function data(Array $data) : Restful;
+    public function data($data) : Restful;
 
     /**
      * SSL Verify Peer
@@ -79,31 +79,31 @@ interface RestfulInterface
      * Post 
      * 
      * @param string $url  = NULL
-     * @param array  $data = []
+     * @param mixed  $data = NULL
      * 
      * @return object
      */
-    public function post(String $url = NULL, Array $data = []);
+    public function post(String $url = NULL, $data = NULL);
 
     /**
      * Put 
      * 
      * @param string $url  = NULL
-     * @param array  $data = []
+     * @param mixed  $data = NULL
      * 
      * @return object
      */
-    public function put(String $url = NULL, Array $data = []);
+    public function put(String $url = NULL, $data = NULL);
 
     /**
      * Delete 
      * 
      * @param string $url  = NULL
-     * @param array  $data = []
+     * @param mixed  $data = NULL
      * 
      * @return object
      */
-    public function delete(String $url = NULL, Array $data = []);
+    public function delete(String $url = NULL, $data = NULL);
 
     /**
      * Return
