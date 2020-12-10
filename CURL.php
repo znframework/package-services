@@ -10,6 +10,7 @@
  */
 
 use ZN\IS;
+use ZN\Base;
 use ZN\Helper;
 use ZN\Request;
 use ZN\Support;
@@ -17,13 +18,6 @@ use ZN\Services\Exception\InvalidArgumentException;
 
 class CURL implements CURLInterface
 {
-    /**
-     * Multiple
-     * 
-     * @var bool
-     */
-    protected $multiple;
-
     /**
      * Init
      * 
@@ -72,20 +66,6 @@ class CURL implements CURLInterface
     }
 
     /**
-     * Multiple
-     * 
-     * @param callback $callback
-     * 
-     * @return mixed
-     */
-    public function multiple()
-    {
-        $this->multiple = true;
-
-        return $this;
-    }
-
-    /**
      * Init
      * 
      * @param string $url = NULL
@@ -99,14 +79,7 @@ class CURL implements CURLInterface
             $url = Request::getSiteURL($url);
         }
 
-        if( $this->multiple )
-        {
-            $this->multipleInitialize($url);
-        }
-        else
-        {
-            $this->init = curl_init($url);
-        }
+        $this->init = curl_init($url);
 
         return $this;
     }
@@ -118,14 +91,21 @@ class CURL implements CURLInterface
      */
     public function exec()
     {
-        if( $this->multiple )
+        if( ! Base::isResourceObject($this->init) )
         {
-            return $this->multipleExecute();
+            return false;
         }
-        else
+
+        curl_setopt_array($this->init, $this->options);
+
+        $this->options = [];
+
+        if( Base::isResourceObject($this->init) )
         {
-            return $this->singleExecute();
-        }   
+            return curl_exec($this->init);
+        }
+
+        return false;
     }
 
     /**
@@ -137,7 +117,7 @@ class CURL implements CURLInterface
      */
     public function escape(String $str) : String
     {
-        if( ! is_resource($this->init) )
+        if( ! Base::isResourceObject($this->init) )
         {
             throw new InvalidArgumentException(NULL, '$this->init');
         }
@@ -154,7 +134,7 @@ class CURL implements CURLInterface
      */
     public function unescape(String $str) : String
     {
-        if( ! is_resource($this->init) )
+        if( ! Base::isResourceObject($this->init) )
         {
             throw new InvalidArgumentException(NULL, '$this->init');
         }
@@ -171,12 +151,17 @@ class CURL implements CURLInterface
      */
     public function info(String $opt = NULL)
     {
-        if( isset($this->multipleInformations) )
+        if( ! Base::isResourceObject($this->init) )
         {
-            return $this->multipleInformations();
+            throw new InvalidArgumentException(NULL, '$this->init');
         }
 
-        return $this->singleInformations($opt);
+        if( $opt === NULL )
+        {
+            return curl_getinfo($this->init);
+        }
+
+        return curl_getinfo($this->init, Helper::toConstant($opt, 'CURLINFO_'));
     }
 
     /**
@@ -186,7 +171,7 @@ class CURL implements CURLInterface
      */
     public function error() : String
     {
-        if( ! is_resource($this->init) )
+        if( ! Base::isResourceObject($this->init) )
         {
             throw new InvalidArgumentException(NULL, '$this->init');
         }
@@ -201,7 +186,7 @@ class CURL implements CURLInterface
      */
     public function errno() : Int
     {
-        if( ! is_resource($this->init) )
+        if( ! Base::isResourceObject($this->init) )
         {
             throw new InvalidArgumentException(NULL, '$this->init');
         }
@@ -267,7 +252,7 @@ class CURL implements CURLInterface
     {
         $init = $this->init;
 
-        if( is_resource($init) )
+        if( Base::isResourceObject($init) )
         {
             $this->init = NULL;
 
@@ -310,105 +295,5 @@ class CURL implements CURLInterface
         {
             return $version[$data] ?? false;
         }
-    }
-
-    /**
-     * Protected single execute
-     */
-    protected function singleExecute()
-    {
-        if( ! is_resource($this->init) )
-        {
-            throw new InvalidArgumentException(NULL, '$this->init');
-        }
-
-        curl_setopt_array($this->init, $this->options);
-
-        $this->options = [];
-
-        return curl_exec($this->init);
-    }
-
-    /**
-     * Protected multiple execute
-     */
-    protected function multipleExecute()
-    {
-        $multiInit = curl_multi_init();
-
-        foreach( $this->inits as $key => $init )
-        {
-            curl_multi_add_handle($multiInit, $this->inits[$key]);
-        }
-
-        do 
-        {
-            curl_multi_exec($multiInit, $running);
-            curl_multi_select($multiInit);
-        } 
-        while( $running > 0 );
-        
-        $return = [];
-
-        foreach( $this->inits as $key => $init )
-        {
-            $this->multipleInformations[] = curl_multi_info_read($multiInit);
-
-            $result[] = curl_multi_getcontent($this->inits[$key]);
-
-            curl_multi_remove_handle($multiInit, $this->inits[$key]);
-        }
-        
-        curl_multi_close($multiInit);
-
-        $this->multiple = NULL;
-        $this->inits    = [];
-
-        return $result;
-    }
-
-    /**
-     * Protected multiple initialize
-     */
-    protected function multipleInitialize($url)
-    {
-        $this->inits[$url] = curl_init($url);
-
-        if( $this->options )
-        {
-            curl_setopt_array($this->inits[$url], $this->options);
-
-            $this->options = [];
-        }
-    }
-
-    /**
-     * Protected multiple informations
-     */
-    protected function multipleInformations()
-    {
-        $return = $this->multipleInformations;
-
-        $this->multipleInformations = NULL;
-
-        return $return;
-    }
-
-    /**
-     * Protected single informations
-     */
-    protected function singleInformations($opt)
-    {
-        if( ! is_resource($this->init) )
-        {
-            throw new InvalidArgumentException(NULL, '$this->init');
-        }
-
-        if( $opt === NULL )
-        {
-            return curl_getinfo($this->init);
-        }
-
-        return curl_getinfo($this->init, Helper::toConstant($opt, 'CURLINFO_'));
     }
 }
