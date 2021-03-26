@@ -80,7 +80,7 @@ class Restful implements RestfulInterface
      * 
      * @return array
      */
-    public function getRequestHeaders() : Array
+    public function getRequestHeaders() : array
     {
         return apache_request_headers();
     }
@@ -92,7 +92,7 @@ class Restful implements RestfulInterface
      * 
      * @return string|array|object
      */
-    public function getRawData(String $type = 'string')
+    public function getRawData(string $type = 'string')
     {
         $rawData = file_get_contents('php://input');
 
@@ -134,7 +134,7 @@ class Restful implements RestfulInterface
      * 
      * @return Restful
      */
-    public function contentType(String $type = 'json', String $charset = 'utf-8') : Restful
+    public function contentType(string $type = 'json', string $charset = 'utf-8') : Restful
     {
         header('Content-Type: application/' . $type . '; charset=' . $charset);
 
@@ -148,7 +148,7 @@ class Restful implements RestfulInterface
      * 
      * @return Restful
      */
-    public function httpStatus(Int $code = NULL) : Restful
+    public function httpStatus(int $code = NULL) : Restful
     {
         $code = $code ?? Redirect::status();
 
@@ -164,7 +164,7 @@ class Restful implements RestfulInterface
      * 
      * @return mixed
      */
-    public function info(String $key = NULL)
+    public function info(string $key = NULL)
     {
         return $key === NULL ? $this->info : ($this->info[strtolower($key)] ?? false);
     }
@@ -176,7 +176,7 @@ class Restful implements RestfulInterface
      * 
      * @return Restful
      */
-    public function url(String $url) : Restful
+    public function url(string $url) : Restful
     {
         $this->url = $url;
 
@@ -204,7 +204,7 @@ class Restful implements RestfulInterface
      * 
      * @return Restful
      */
-    public function sslVerifyPeer(Bool $type = false) : Restful
+    public function sslVerifyPeer(bool $type = false) : Restful
     {
         $this->sslVerifyPeer = $type;
 
@@ -218,7 +218,7 @@ class Restful implements RestfulInterface
      * 
      * @return object
      */
-    public function get(String $url = NULL)
+    public function get(string $url = NULL)
     {
         $response = $this->curl
                          ->init($this->url ?? $url)
@@ -237,7 +237,7 @@ class Restful implements RestfulInterface
      * 
      * @return object
      */
-    public function post(String $url = NULL, $data = NULL)
+    public function post(string $url = NULL, $data = NULL)
     {
         $response = $this->curl
                          ->init($this->url ?? $url)
@@ -258,7 +258,7 @@ class Restful implements RestfulInterface
      * 
      * @return object
      */
-    public function postJson(String $url = NULL, $data = NULL)
+    public function postJson(string $url = NULL, $data = NULL)
     {
         return $this->post($url, json_encode($this->data ?? $data));
     }
@@ -271,7 +271,7 @@ class Restful implements RestfulInterface
      * 
      * @return object
      */
-    public function put(String $url = NULL, $data = NULL)
+    public function put(string $url = NULL, $data = NULL)
     {
         return $this->_customRequest($url, $this->buildQuery($data), __FUNCTION__);
     }
@@ -284,7 +284,7 @@ class Restful implements RestfulInterface
      * 
      * @return object
      */
-    public function putJson(String $url = NULL, $data = NULL)
+    public function putJson(string $url = NULL, $data = NULL)
     {
         return $this->_customRequest($url, json_encode($this->data ?? $data), 'put');
     }
@@ -298,7 +298,7 @@ class Restful implements RestfulInterface
      * 
      * @return object
      */
-    public function patch(String $url = NULL, $data = NULL)
+    public function patch(string $url = NULL, $data = NULL)
     {
         return $this->_customRequest($url, $this->buildQuery($data), __FUNCTION__);
     }
@@ -311,7 +311,7 @@ class Restful implements RestfulInterface
      * 
      * @return object
      */
-    public function patchJson(String $url = NULL, $data = NULL)
+    public function patchJson(string $url = NULL, $data = NULL)
     {
         return $this->_customRequest($url, json_encode($this->data ?? $data), 'patch');
     }
@@ -324,7 +324,7 @@ class Restful implements RestfulInterface
      * 
      * @return object
      */
-    public function delete(String $url = NULL, $data = NULL)
+    public function delete(string $url = NULL, $data = NULL)
     {
         return $this->_customRequest($url, $this->data ?? $data, __FUNCTION__);
     }
@@ -336,7 +336,7 @@ class Restful implements RestfulInterface
      * 
      * @return callable
      */
-    public function return(Callable $callback)
+    public function return(callable $callback)
     {
         return $callback();
     }
